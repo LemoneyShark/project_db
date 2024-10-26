@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company List with Pagination</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgba(255, 232, 128, 0.823);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard {
+            margin-bottom: 40px;
+        }
+
+        .header {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            margin-left: 10px;
+            width: 23%;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            background-color: #ffc526;
+        }
+
+        .company-section {
+            background-color: #ffc526;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc; 
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            background-color: rgba(255, 232, 128, 0.823);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            margin: 0 5px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .pagination button.disabled {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+
+        .pagination button.active {
+            background-color: rgba(255, 232, 128, 0.823);
+            color: rgb(0, 0, 0);
+        }
+        .user-info {
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dashboard Section -->
+    <div class="dashboard">
+        <div class="header">
+            
+            <div class="user-info">
+                <span id="username">{{ username }}</span> <!-- แสดง username ที่นี่ -->
+            </div>
+            <h2><center>Dashboard </center></h2>
+        </div>
+
+        <div class="cards">
+            <div class="card" >
+                <h3>Projects</h3>
+                <p>18</p>
+                <small>2 Completed</small>
+            </div>
+            <div class="card">
+                <h3>Active Tasks</h3>
+                <p>132</p>
+                <small>28 Completed</small>
+            </div>
+            <div class="card">
+                <h3>Teams</h3>
+                <p>12</p>
+                <small>1 Completed</small>
+            </div>
+            <div class="card">
+                <h3>Productivity</h3>
+                <p>76%</p>
+                <small>5% Completed</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company List with Pagination Section -->
+    <div class="company-section">
+        <h2>Company List</h2>
+
+        <input type="text" id="searchInput" placeholder="Search for a company...">
+
+        <ul id="companyList"></ul> <!-- Display company list here -->
+
+        <!-- Pagination buttons -->
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <script>
+        let companies = [];  // เก็บข้อมูลบริษัททั้งหมด
+        let currentPage = 1;
+        const companiesPerPage = 10; // จำนวนบริษัทต่อหน้า
+    
+        // ฟังก์ชันสำหรับดึงข้อมูลจาก API
+        async function fetchCompanies() {
+            try {
+                const response = await fetch('/companies');
+                const result = await response.json();
+                companies = result.data;
+    
+                // แสดงบริษัททั้งหมด
+                displayCompanies();
+                setupPagination();
+            } catch (error) {
+                console.error('Error fetching companies:', error);
+            }
+        }
+    
+        // ฟังก์ชันสำหรับแสดงรายชื่อบริษัททั้งหมดหรือบริษัทที่กรองแล้ว
+        function displayCompanies() {
+            const companyList = document.getElementById("companyList");
+            companyList.innerHTML = ''; // เคลียร์รายการเดิมก่อน
+    
+            // คำนวณบริษัทที่จะเริ่มต้นแสดงในแต่ละหน้า
+            const startIndex = (currentPage - 1) * companiesPerPage;
+            const endIndex = startIndex + companiesPerPage;
+            const companiesToShow = companies.slice(startIndex, endIndex);
+    
+            if (companiesToShow.length === 0) {
+                const li = document.createElement('li');
+                li.textContent = 'Not Found';
+                companyList.appendChild(li);
+            } else {
+                companiesToShow.forEach(company => {
+                    const li = document.createElement('li');
+                    li.textContent = company.name;
+                    companyList.appendChild(li);
+                });
+            }
+        }
+    
+        // Live search function
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+    
+            if (searchTerm === '') {
+                // หากช่องค้นหาว่าง ให้แสดงบริษัททั้งหมด
+                fetchCompanies();
+            } else {
+                // กรองบริษัทตามคำที่ค้นหา
+                const filteredCompanies = companies.filter(company => 
+                    company.name.toLowerCase().includes(searchTerm)
+                );
+    
+                // แสดงเฉพาะผลลัพธ์ที่ค้นหาเจอ
+                companies = filteredCompanies.length ? filteredCompanies : [];
+                currentPage = 1; // เริ่มต้นที่หน้าที่ 1
+                displayCompanies();
+                setupPagination();
+            }
+        });
+    
+        // ฟังก์ชันสำหรับตั้งค่าปุ่มแบ่งหน้า
+        function setupPagination() {
+            const totalPages = Math.ceil(companies.length / companiesPerPage);
+            const pagination = document.getElementById("pagination");
+            pagination.innerHTML = ''; // เคลียร์ปุ่มเดิม
+    
+            // สร้างปุ่มสำหรับแต่ละหน้า
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.classList.add(i === currentPage ? 'active' : '');
+                button.addEventListener('click', function() {
+                    currentPage = i;
+                    displayCompanies();
+                    setupPagination();
+                });
+                pagination.appendChild(button);
+            }
+        }
+    
+        // เรียกใช้ฟังก์ชัน fetchCompanies เมื่อโหลดหน้าเสร็จ
+        window.onload = fetchCompanies;
+    </script>
+
+</body>
+</html>
