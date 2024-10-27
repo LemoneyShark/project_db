@@ -2,7 +2,8 @@ import pandas as pd
 import pyodbc
 
 # อ่านไฟล์ CSV และแปลงคอลัมน์ให้เป็น string
-file_path = 'E:/db/project_db/backDB/aihitdata-uk-10k.csv'
+# file_path = 'E:/db/project_db/importCSVtoDB/aihitdata-worldwide-10k.csv'
+file_path = 'E:/db/project_db/importCSVtoDB/aihitdata-uk-10k.csv'
 data2 = pd.read_csv(file_path, dtype={
     'id': str,
     'website':str,
@@ -40,15 +41,15 @@ cursor = conn.cursor()
 for _, row in data2.iterrows():
     try:
         cursor.execute('''
-            INSERT INTO cominfo (id, name, website, url, description_short)
-            VALUES (?, ?, ?, ?, ?)
-        ''', row['id'], row['name'], row['website'], row['url'], row['description_short'])
+            INSERT INTO cominfo (id, name, website, url, description_short, type)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', row['id'], row['name'], row['website'], row['url'], row['description_short'],2)
     except Exception as e:
         print(f"Error inserting row {row['id']}: {e}")
 # นำเข้าข้อมูลไปยังตาราง comstatistics
 for _, row in data2.iterrows():
         cursor.execute('''
-            INSERT INTO comstatistics (com_id, people_count, senior_people_count, emails_count, personal_emails_count,
+            INSERT INTO comlogs (com_id, people_count, senior_people_count, emails_count, personal_emails_count,
                                        phones_count, addresses_count, investors_count, clients_count, partners_count,
                                        changes_count, people_changes_count, contact_changes_count)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -62,5 +63,3 @@ for _, row in data2.iterrows():
 conn.commit()
 cursor.close()
 conn.close()
-
-

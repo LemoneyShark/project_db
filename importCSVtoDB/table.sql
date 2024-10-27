@@ -3,11 +3,12 @@ CREATE TABLE cominfo (
     name VARCHAR(255),
     website VARCHAR(255),
     url VARCHAR(255),
-    description_short VARCHAR(MAX)
+    description_short VARCHAR(MAX),
+    type INT
 );
 
 CREATE TABLE comstatistics (
-    com_id VARCHAR(100) FOREIGN KEY REFERENCES companies(id),
+    com_id VARCHAR(100) FOREIGN KEY REFERENCES cominfo(id),
     people_count INT,
     senior_people_count INT,
     emails_count INT,
@@ -21,3 +22,11 @@ CREATE TABLE comstatistics (
     people_changes_count INT,
     contact_changes_count INT
 );
+
+CREATE TABLE type (
+    id INT PRIMARY KEY,
+    type_name VARCHAR(50)
+);
+
+ALTER TABLE cominfo
+ADD CONSTRAINT fk_type FOREIGN KEY (type) REFERENCES type(id);
