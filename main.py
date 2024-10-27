@@ -86,28 +86,15 @@ async def get_companies(db: Session = Depends(get_db)):
         print(f"Error fetching companies: {e}")
         raise HTTPException(status_code=500, detail="An error occurred fetching companies")
 
-
 user_data = [
     {"id": 1, "name": "Alice", "age": 25},
     {"id": 2, "name": "Bob", "age": 30},
     {"id": 3, "name": "Charlie", "age": 35},
 ]
 
-@app.get("/test", response_class=HTMLResponse)
-async def read_root(request: Request):
-    data = fetch()
-    # ส่งข้อมูล user_data ไปยัง template index.html
-    return templates.TemplateResponse("test1.html", {"request": request, "datas": data})
 
-@app.get("/data/{data_id}", response_class=HTMLResponse)
-async def get_user(request: Request, data_id: str):
+@app.get("/comdash/{com_id}", response_class=HTMLResponse)
+async def read_dashboard(request: Request, com_id: int):
     # ค้นหาผู้ใช้ตาม `id`
-    data = fetch()
-    name = next((u for u in data if u["id"] == data_id), None)
-    if not name:
-        return HTMLResponse(content="<h1>User not found</h1>", status_code=404)
-    
-    # ส่งข้อมูลผู้ใช้ไปยัง template user.html
-    return templates.TemplateResponse("test2.html", {"request": request, "name": name})
-    
-    
+    datas = fetch_com(com_id)
+    return templates.TemplateResponse("comdashboard.html", {"request": request, "datas":datas})    

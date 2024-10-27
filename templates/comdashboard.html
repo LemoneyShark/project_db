@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/styles_dashcom.css">
+</head>
+<body>
+    <div class="container">
+        <!-- General Info Section -->
+        {% for data in datas %}
+        <div class="general-info">
+            <h2>{{data.name}}</h2>
+            <p><strong>Description:</strong>{{data.description_short}}</p>
+            <p><strong>Area:</strong> {{data.area}} </p>
+            <p><strong>Website:</strong> <a href={{data.website}}>{{data.website}}</a></p>
+            <p><strong>URL:</strong> <a href={{data.url}}>View Company Profile</a></p>
+        </div>
+
+        <!-- Graphs Section -->
+        <div class="graphs-section">
+            <div class="bar-chart">
+                <h3>Contact Information Bar Chart</h3>
+                <canvas id="contactBarChart"></canvas>
+            </div>
+            <div class="pie-chart">
+                <h3>Changes Distribution Pie Chart</h3>
+                <canvas id="changesPieChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Data Table Section -->
+        <div class="data-table">
+            <h3>Company Data</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>People Count</th>
+                        <th>Senior People Count</th>
+                        <th>Emails Count</th>
+                        <th>Personal Emails Count</th>
+                        <th>Phones Count</th>
+                        <th>Addresses Count</th>
+                        <th>Investors Count</th>
+                        <th>Clients Count</th>
+                        <th>Partners Count</th>
+                        <th>Changes Count</th>
+                        <th>People Changes Count</th>
+                        <th>Contact Changes Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr 
+                        data-people-count="{{ data.people_count }}" 
+                        data-senior-people-count="{{ data.senior_people_count }}" 
+                        data-emails-count="{{ data.emails_count }}" 
+                        data-phones-count="{{ data.phones_count }}"
+                        data-changes-count="{{ data.changes_count }}"
+                        data-people-changes-count="{{ data.people_changes_count }}"
+                        data-contact-changes-count="{{ data.contact_changes_count }}"
+                    >
+                    <td>{{data.people_count}}</td>
+                    <td>{{data.senior_people_count}}</td>
+                    <td>{{data.emails_count}}</td>
+                    <td>{{data.personal_emails_count}}</td>
+                    <td>{{data.phones_count}}</td>
+                    <td>{{data.addresses_count}}</td>
+                    <td>{{data.investors_count}}</td>
+                    <td>{{data.clients_count}}</td>
+                    <td>{{data.partners_count}}</td>
+                    <td>{{data.changes_count}}</td>
+                    <td>{{data.people_changes_count}}</td>
+                    <td>{{data.contact_changes_count}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Include Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/dashcom.js"></script>
+</body>
+</html>
+
