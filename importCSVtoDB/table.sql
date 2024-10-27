@@ -28,5 +28,8 @@ CREATE TABLE type (
     type_name VARCHAR(50)
 );
 
+INSERT INTO type (id, type_name) VALUES (1, 'worldwide'), (2, 'uk');
+
+
 ALTER TABLE cominfo
 ADD CONSTRAINT fk_type FOREIGN KEY (type) REFERENCES type(id);
