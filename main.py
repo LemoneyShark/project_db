@@ -11,9 +11,10 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # ตั้งค่าเชื่อมต่อฐานข้อมูล SQL Server
-DATABASE_URL = "mssql+pyodbc://LAPTOP-ES3P0PGD\\SQLEXPRESS/aihitdata?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes"
+DATABASE_URL = "mssql+pyodbc://localhost\\SQLEXPRESS/aihitdata?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 # Dependency สำหรับการเชื่อมต่อฐานข้อมูล
 def get_db():
