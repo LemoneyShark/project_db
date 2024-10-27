@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
-from db import*
+from db import *
 
 app = FastAPI()
 
@@ -84,18 +84,6 @@ async def get_companies(db: Session = Depends(get_db)):
     except Exception as e:
         print(f"Error fetching companies: {e}")
         raise HTTPException(status_code=500, detail="An error occurred fetching companies")
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 user_data = [

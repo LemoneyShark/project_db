@@ -2,41 +2,42 @@ let companies = [];  // เก็บข้อมูลบริษัททั�
 let currentPage = 1;
 const companiesPerPage = 10; // จำนวนบริษัทต่อหน้า
 
-// ฟังก์ชันสำหรับดึงข้อมูลจาก API
+// ฟังก์ชันดึงข้อมูลจาก API
 async function fetchCompanies() {
     try {
-        const response = await fetch('/companies');
+        const response = await fetch('/companies'); // เรียก API
         const result = await response.json();
         companies = result.data;
 
-        // แสดงบริษัททั้งหมด
-        displayCompanies();
-        setupPagination();
+        // เริ่มต้นแสดงข้อมูล
+        filterAndSortCompanies();
+        setupPagination(companies);
     } catch (error) {
         console.error('Error fetching companies:', error);
     }
 }
 
-// ฟังก์ชันสำหรับแสดงรายชื่อบริษัททั้งหมดหรือบริษัทที่กรองแล้ว
-function displayCompanies() {
-    const companyTable = document.getElementById("companyTable");
-    companyTable.innerHTML = ''; // เคลียร์ข้อมูลเก่า
+// ฟังก์ชันแสดงข้อมูลบริษัทตามหน้าและการกรอง
+function displayCompanies(data) {
+    const companyTable = document.getElementById('companyTable');
+    companyTable.innerHTML = ''; // เคลียร์ข้อมูลเดิม
 
     // สร้างแถวหัวตาราง
     const headerRow = document.createElement('tr');
     headerRow.innerHTML = `
+        
         <th>Name</th>
         <th>Website</th>
         <th>Area</th>
     `;
     companyTable.appendChild(headerRow);
 
-    // คำนวณบริษัทที่จะเริ่มต้นแสดงในแต่ละหน้า
+    // คำนวณหน้าเริ่มต้นและสิ้นสุดสำหรับการแบ่งหน้า <th>ID</th>
     const startIndex = (currentPage - 1) * companiesPerPage;
     const endIndex = startIndex + companiesPerPage;
-    const companiesToShow = companies.slice(startIndex, endIndex);
+    const companiesToShow = data.slice(startIndex, endIndex);
 
-    if (companiesToShow.length === 0    ) {
+    if (companiesToShow.length === 0) {
         const emptyRow = document.createElement('tr');
         emptyRow.innerHTML = `<td colspan="4">Not Found</td>`;
         companyTable.appendChild(emptyRow);
@@ -46,99 +47,103 @@ function displayCompanies() {
             row.innerHTML = `
                 <td>${company.name}</td>
                 <td>${company.website || 'N/A'}</td>
-                <td>${company.area || 0}</td>
-                
+                <td>${company.area || 'N/A'}</td>
             `;
+            // คลิกที่แถวเพื่อไปหน้าอื่น <td>${company.id}</td>
+            row.addEventListener('click', () => {
+                window.location.href = `/data/${company.id}`;
+            });
             companyTable.appendChild(row);
         });
     }
 }
 
-// Live search function
-document.getElementById('searchInput').addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
+// ฟังก์ชันกรองและเรียงข้อมูล
+function filterAndSortCompanies() {
+    let filteredCompanies = [...companies]; // สร้างสำเนาของข้อมูล
 
-    if (searchTerm === '') {
-        // หากช่องค้นหาว่าง ให้แสดงบริษัททั้งหมด
-        fetchCompanies();
-    } else {
-        // กรองบริษัทตามคำที่ค้นหา
-        const filteredCompanies = companies.filter(company => 
-            company.name.toLowerCase().includes(searchTerm)
-        );
-
-        // แสดงเฉพาะผลลัพธ์ที่ค้นหาเจอ
-        companies = filteredCompanies.length ? filteredCompanies : [];
-        currentPage = 1; // เริ่มต้นที่หน้าที่ 1
-        displayCompanies();
-        setupPagination();
+    // กรองข้อมูลตามพื้นที่ (Area)
+    const areaFilter = document.getElementById('filterArea').value;
+    if (areaFilter) {
+        filteredCompanies = filteredCompanies.filter(company => company.area === areaFilter);
     }
-});
 
-// ฟังก์ชันสำหรับตั้งค่าปุ่มแบ่งหน้า
-function setupPagination() {
-    const totalPages = Math.ceil(companies.length / companiesPerPage);
-    const pagination = document.getElementById("pagination");
-    pagination.innerHTML = ''; // เคลียร์ปุ่มเดิม
+    // ค้นหาตามชื่อหรือเว็บไซต์
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    filteredCompanies = filteredCompanies.filter(company =>
+        company.name.toLowerCase().includes(searchTerm) ||
+        company.website.toLowerCase().includes(searchTerm)
+    );
 
-    // เพิ่มปุ่มก่อนหน้า
+    // เรียงข้อมูลตามตัวเลือกที่เลือก
+    const sortBy = document.getElementById('sortBy').value;
+    filteredCompanies.sort((a, b) => {
+        if (a[sortBy] < b[sortBy]) return -1;
+        if (a[sortBy] > b[sortBy]) return 1;
+        return 0;
+    });
+
+    // แสดงผลข้อมูลที่ผ่านการกรองและเรียงแล้ว
+    displayCompanies(filteredCompanies);
+    setupPagination(filteredCompanies);
+}
+
+// ตั้งค่าปุ่มแบ่งหน้า (Pagination)
+function setupPagination(data) {
+    const totalPages = Math.ceil(data.length / companiesPerPage);
+    const pagination = document.getElementById('pagination');
+    pagination.innerHTML = ''; // ล้างปุ่มเดิม
+
+    const maxVisibleButtons = 5; // จำนวนปุ่มที่จะแสดง
+
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
+
+    if (endPage - startPage < maxVisibleButtons - 1) {
+        startPage = Math.max(1, endPage - maxVisibleButtons + 1);
+    }
+
+    // ปุ่ม "ก่อนหน้า"
     if (currentPage > 1) {
         const prevButton = document.createElement('button');
         prevButton.textContent = 'Prev';
-        prevButton.addEventListener('click', function() {
+        prevButton.addEventListener('click', () => {
             currentPage--;
-            displayCompanies();
-            setupPagination();
+            filterAndSortCompanies();
         });
         pagination.appendChild(prevButton);
     }
 
-    // กำหนดช่วงปุ่มที่จะแสดง
-    let startPage, endPage;
-    if (totalPages <= 5) {
-        startPage = 1;
-        endPage = totalPages;
-    } else {
-        startPage = Math.max(1, currentPage - 2);
-        endPage = Math.min(totalPages, currentPage + 2);
-
-        // หากหน้าปัจจุบันอยู่ใกล้สุดขอบ ให้ปรับขอบเขต
-        if (currentPage <= 3) {
-            endPage = 5; // แสดง 5 หน้าแรก
-        }
-        if (currentPage + 2 >= totalPages) {
-            startPage = totalPages - 4; // แสดง 5 หน้าสุดท้าย
-        }
-    }
-
-    // สร้างปุ่มสำหรับแต่ละหน้า
+    // ปุ่มเลขหน้า
     for (let i = startPage; i <= endPage; i++) {
         const button = document.createElement('button');
         button.textContent = i;
-        // ตรวจสอบว่าหน้าเป็นหน้าปัจจุบันและเพิ่มคลาส active
         if (i === currentPage) {
-            button.classList.add('active'); // เพิ่มคลาส active ให้กับปุ่มหน้าปัจจุบัน
+            button.classList.add('active');
         }
-        button.addEventListener('click', function() {
+        button.addEventListener('click', () => {
             currentPage = i;
-            displayCompanies();
-            setupPagination();
+            filterAndSortCompanies();
         });
         pagination.appendChild(button);
     }
 
-    // เพิ่มปุ่มถัดไป
+    // ปุ่ม "ถัดไป"
     if (currentPage < totalPages) {
         const nextButton = document.createElement('button');
         nextButton.textContent = 'Next';
-        nextButton.addEventListener('click', function() {
+        nextButton.addEventListener('click', () => {
             currentPage++;
-            displayCompanies();
-            setupPagination();
+            filterAndSortCompanies();
         });
         pagination.appendChild(nextButton);
     }
 }
 
-// เรียกใช้ฟังก์ชัน fetchCompanies เมื่อโหลดหน้าเสร็จ
+// เรียกใช้ฟังก์ชันเมื่อหน้าโหลดเสร็จ
 window.onload = fetchCompanies;
+
+// Event listeners สำหรับ Search และ Sort
+document.getElementById('searchInput').addEventListener('input', filterAndSortCompanies);
+document.getElementById('filterArea').addEventListener('change', filterAndSortCompanies);
+document.getElementById('sortBy').addEventListener('change', filterAndSortCompanies);
