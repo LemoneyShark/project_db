@@ -7,7 +7,7 @@ CREATE TABLE cominfo (
     type INT
 );
 
-CREATE TABLE comstatistics (
+CREATE TABLE comlogs (
     com_id VARCHAR(100) FOREIGN KEY REFERENCES cominfo(id),
     people_count INT,
     senior_people_count INT,
