@@ -85,19 +85,6 @@ async def get_companies(db: Session = Depends(get_db)):
         print(f"Error fetching companies: {e}")
         raise HTTPException(status_code=500, detail="An error occurred fetching companies")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 user_data = [
     {"id": 1, "name": "Alice", "age": 25},
     {"id": 2, "name": "Bob", "age": 30},

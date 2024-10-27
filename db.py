@@ -2,7 +2,7 @@ import pandas as pd
 import pyodbc
 conn_str = (
     "DRIVER={ODBC Driver 17 for SQL Server};"
-    "SERVER=LAPTOP-ES3P0PGD\\SQLEXPRESS;"  # ใช้สองแบ็คสแลชเพื่อ escape
+    "SERVER=localhost\\SQLEXPRESS;"  # ใช้สองแบ็คสแลชเพื่อ escape
     "DATABASE=aihitdata;"
     "Trusted_Connection=yes;"
 )
