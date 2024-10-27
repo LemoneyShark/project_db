@@ -61,8 +61,9 @@ def serve_index():
 
 @app.get("/dashboard", response_class=HTMLResponse)
 def serve_index(request: Request):
-    total = fetch_total()
-    return templates.TemplateResponse("dashboard.html", {"request": request, "total": total})
+    totals = fetch_total_all()
+    
+    return templates.TemplateResponse("dashboard.html", {"request": request, "totals": totals})
 
 # API สำหรับดึงข้อมูลบริษัท
 @app.get("/companies")
