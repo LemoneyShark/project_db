@@ -1,15 +1,16 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f4f8;
+    background-color: #0A1128;
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    color: #FFF;
 }
 
 .container {
-    background-color: #fff;
+    background-color: #003366;
     padding: 40px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -19,7 +20,6 @@ body {
 
 h2 {
     margin-bottom: 20px;
-    color: #333;
 }
 
 label {
@@ -39,7 +39,7 @@ input[type="text"], input[type="password"] {
 button {
     width: 100%;
     padding: 12px;
-    background-color: #4CAF50;
+    background-color: #3C4F76; /* เทาสเลท */
     color: white;
     border: none;
     border-radius: 4px;
@@ -48,5 +48,5 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #2a53a7; /* เทาสเลท */
 }

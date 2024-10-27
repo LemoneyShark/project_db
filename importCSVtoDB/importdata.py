@@ -2,8 +2,8 @@ import pandas as pd
 import pyodbc
 
 # อ่านไฟล์ CSV และแปลงคอลัมน์ให้เป็น string
-# file_path = 'E:/db/project_db/importCSVtoDB/aihitdata-worldwide-10k.csv'
-file_path = 'E:/db/project_db/importCSVtoDB/aihitdata-uk-10k.csv'
+#file_path = r'importCSVtoDB\aihitdata-worldwide-10k.csv'
+file_path = r'importCSVtoDB\aihitdata-uk-10k.csv'
 data2 = pd.read_csv(file_path, dtype={
     'id': str,
     'website':str,
