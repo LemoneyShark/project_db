@@ -1,14 +1,19 @@
 from fastapi import FastAPI,Depends, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
+from db import*
 
 app = FastAPI()
 
 # ตั้งค่าให้เสิร์ฟไฟล์ static จากโฟลเดอร์ "static"
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# ตั้งค่าโฟลเดอร์ templates
+templates = Jinja2Templates(directory="templates")
 
 # ตั้งค่าเชื่อมต่อฐานข้อมูล SQL Server
 DATABASE_URL = "mssql+pyodbc://localhost\\SQLEXPRESS/aihitdata?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes"
@@ -54,9 +59,10 @@ async def login(data: LoginData, db: Session = Depends(get_db)):
 def serve_index():
     return FileResponse("templates/login.html")
 
-@app.get("/dashboard")
-def serve_index():
-    return FileResponse("templates/dashboard.html")
+@app.get("/dashboard", response_class=HTMLResponse)
+def serve_index(request: Request):
+    total = fetch_total()
+    return templates.TemplateResponse("dashboard.html", {"request": request, "total": total})
 
 # API สำหรับดึงข้อมูลบริษัท
 @app.get("/companies")
@@ -78,17 +84,41 @@ async def get_companies(db: Session = Depends(get_db)):
     except Exception as e:
         print(f"Error fetching companies: {e}")
         raise HTTPException(status_code=500, detail="An error occurred fetching companies")
-    
-    
 
-# API สำหรับดึงข้อมูลจากฐานข้อมูล
-@app.get("/total_employees")
-async def get_total_employees(db: Session = Depends(get_db)):
-    try:
-        query = text("SELECT SUM(employee) AS total FROM cominfo")
-        result = db.execute(query).fetchone()
-        total = result.total if result.total is not None else 0  # ถ้าไม่พบให้ใช้ค่า 0
-        return {"total_employees": total}
-    except Exception as e:
-        print(f"Error: {e}")
-        return {"error": "Unable to fetch total employees"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+user_data = [
+    {"id": 1, "name": "Alice", "age": 25},
+    {"id": 2, "name": "Bob", "age": 30},
+    {"id": 3, "name": "Charlie", "age": 35},
+]
+
+@app.get("/test", response_class=HTMLResponse)
+async def read_root(request: Request):
+    data = fetch()
+    # ส่งข้อมูล user_data ไปยัง template index.html
+    return templates.TemplateResponse("test1.html", {"request": request, "datas": data})
+
+@app.get("/data/{data_id}", response_class=HTMLResponse)
+async def get_user(request: Request, data_id: str):
+    # ค้นหาผู้ใช้ตาม `id`
+    data = fetch()
+    name = next((u for u in data if u["id"] == data_id), None)
+    if not name:
+        return HTMLResponse(content="<h1>User not found</h1>", status_code=404)
+    
+    # ส่งข้อมูลผู้ใช้ไปยัง template user.html
+    return templates.TemplateResponse("test2.html", {"request": request, "name": name})
+    
+    

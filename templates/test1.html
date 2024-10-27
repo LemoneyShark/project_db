@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User List</title>
+</head>
+<body>
+    <h1>User List</h1>
+    {% for data in datas %}
+        <p>Name: {{ data.name }}
+        <form action="/data/{{ data.id }}" method="get" style="display:inline;">
+            <button type="submit">View detail {{ data.name }}</button>
+        </form>
+        </p>
+    {% endfor %}
+</body>
+</html>
