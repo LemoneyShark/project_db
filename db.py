@@ -24,6 +24,7 @@ def fetch():
         
         # เพิ่มข้อมูลลงใน list ในรูปแบบ dictionary
         for row in rows:
+            print(row[0])
             user_data.append({"id": row[0], "name": row[1]})
     
     except Exception as e:
@@ -36,10 +37,13 @@ def fetch():
     return user_data  # ส่งคืน list ของ dictionary
 
 # เรียกใช้ฟังก์ชันและแสดงผลลัพธ์
-def fetch_total():
+def fetch_total_all():
+        total_data = []
         conn = pyodbc.connect(conn_str)
         cursor = conn.cursor()
-        query = "SELECT SUM(people_count) AS total_amount FROM comlogs;"
+        query = "SELECT SUM(people_count) AS total_emp,SUM(changes_count) AS total_change,COUNT(com_id) AS total_com FROM comlogs;"
         cursor.execute(query)
         rows = cursor.fetchall()
-        return rows[0][0]
+        for row in rows:
+            total_data.append({"emp": row[0], "changes": row[1],"com":row[2]})
+        return total_data
