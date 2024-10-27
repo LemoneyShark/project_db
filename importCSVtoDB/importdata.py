@@ -41,7 +41,7 @@ cursor = conn.cursor()
 for _, row in data2.iterrows():
     try:
         cursor.execute('''
-            INSERT INTO cominfo (id, name, website, url, description_short, type)
+            INSERT INTO cominfo (id, name, website, url, description_short, area)
             VALUES (?, ?, ?, ?, ?, ?)
         ''', row['id'], row['name'], row['website'], row['url'], row['description_short'],2)
     except Exception as e:
