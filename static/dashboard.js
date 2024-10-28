@@ -17,29 +17,46 @@ async function fetchCompanies() {
     }
 }
 
-// ฟังก์ชันแสดงข้อมูลบริษัทตามหน้าและการกรอง
-function displayCompanies(data) {
-    const companyTable = document.getElementById('companyTable');
-    companyTable.innerHTML = ''; // เคลียร์ข้อมูลเดิม
+const searchInput = document.getElementById('searchInput');
 
-    // สร้างแถวหัวตาราง
+// ตรวจสอบว่าค้นหาได้เมื่อพิมพ์
+searchInput.addEventListener('input', function () {
+    const searchTerm = this.value.toLowerCase();
+
+    // กรองข้อมูลจาก companies array
+    const filteredCompanies = companies.filter(company =>
+        company.name.toLowerCase().includes(searchTerm) ||
+        company.website?.toLowerCase().includes(searchTerm)
+    );
+
+    // อัปเดตหน้าปัจจุบันเป็นหน้าแรก
+    currentPage = 1;
+
+    // แสดงเฉพาะบริษัทที่ค้นพบ
+    displayCompanies(filteredCompanies);
+    setupPagination(filteredCompanies);
+});
+
+
+function displayCompanies(filteredCompanies = companies) {
+    const companyTable = document.getElementById("companyTable");
+    companyTable.innerHTML = ''; // เคลียร์ข้อมูลเก่า
+
     const headerRow = document.createElement('tr');
     headerRow.innerHTML = `
-        
         <th>Name</th>
         <th>Website</th>
         <th>Area</th>
     `;
     companyTable.appendChild(headerRow);
 
-    // คำนวณหน้าเริ่มต้นและสิ้นสุดสำหรับการแบ่งหน้า <th>ID</th>
     const startIndex = (currentPage - 1) * companiesPerPage;
     const endIndex = startIndex + companiesPerPage;
-    const companiesToShow = data.slice(startIndex, endIndex);
+    const companiesToShow = filteredCompanies.slice(startIndex, endIndex);
 
     if (companiesToShow.length === 0) {
         const emptyRow = document.createElement('tr');
-        emptyRow.innerHTML = `<td colspan="4">Not Found</td>`;
+        emptyRow.innerHTML = `<td colspan="3">No Results Found</td>`;
         companyTable.appendChild(emptyRow);
     } else {
         companiesToShow.forEach(company => {
@@ -49,10 +66,11 @@ function displayCompanies(data) {
                 <td>${company.website || 'N/A'}</td>
                 <td>${company.area || 'N/A'}</td>
             `;
-            // คลิกที่แถวเพื่อไปหน้าอื่น <td>${company.id}</td>
+
             row.addEventListener('click', () => {
-                window.location.href = `/data/${company.id}`;
+                window.location.href = `/comdash/${company.id}`;
             });
+
             companyTable.appendChild(row);
         });
     }
@@ -139,6 +157,7 @@ function setupPagination(data) {
         pagination.appendChild(nextButton);
     }
 }
+
 
 // เรียกใช้ฟังก์ชันเมื่อหน้าโหลดเสร็จ
 window.onload = fetchCompanies;

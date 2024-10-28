@@ -69,7 +69,7 @@ def serve_index(request: Request):
 @app.get("/companies")
 async def get_companies(db: Session = Depends(get_db)):
     try:
-        query = text("select c.name,c.website,a.type_name from cominfo as c left join area as a on c.area = a.id")
+        query = text("select c.name,c.website,a.type_name,c.id from cominfo as c left join area as a on c.area = a.id")
         result = db.execute(query).fetchall()
         
         # แปลงผลลัพธ์เป็น JSON
@@ -78,6 +78,7 @@ async def get_companies(db: Session = Depends(get_db)):
                 "name": row[0],
                 "website": row[1] if row[1] is not None else 'N/A',
                 "area": row[2] if row[2] is not None else 'N/A',
+                "id": row[3] if row[3] is not None else 'N/A',
             } for row in result
         ]
         return {"data": companies}

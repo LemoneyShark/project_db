@@ -49,5 +49,7 @@ const changesPieChart = new Chart(ctxPie, {
         responsive: true
     }
 });
-
-
+// ปุ่มย้อนกลับไปหน้าก่อนหน้า
+document.getElementById('backButton').addEventListener('click', () => {
+    history.back(); 
+});
