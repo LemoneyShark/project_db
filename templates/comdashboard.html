@@ -13,7 +13,7 @@
             <h2>{{data.name}}</h2>
             <p><strong>Description:</strong>{{data.description_short}}</p>
             <p><strong>Area:</strong> {{data.area}} </p>
-            <p><strong>Website:</strong> <a href={{data.website}}>{{data.website}}</a></p>
+            <p><strong>Website:</strong> <a href="{{'http://'+data.website}}" target="_blank">{{ data.website }}</a></p>
             <p><strong>URL:</strong> <a href={{data.url}}>View Company Profile</a></p>
         </div>
 
