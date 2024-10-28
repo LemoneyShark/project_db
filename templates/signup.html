@@ -1,0 +1,85 @@
+<!-- signup.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        body {
+            font-family: Quicksand, sans-serif;
+    background-color: #0A1128;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #FFF;
+        }
+
+        .signup-container {
+            font-family: Quicksand, sans-serif;
+    background-color: #003366;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+        }
+
+        .signup-container h2 {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .signup-btn {
+            width: 100%;
+            background-color: #3b4a6b;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .signup-btn:hover {
+            background-color: #4f6281;
+        }
+
+        .back-to-login {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .back-to-login a {
+            color: #cfd8e3;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h2>Sign Up</h2>
+        <form action="/register" method="post">
+            <input type="text" name="firstName" placeholder="First Name" required>
+            <input type="text" name="lastName" placeholder="Last Name" required>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <button type="submit" class="signup-btn">Sign Up</button>
+        </form>
+        <div class="back-to-login">
+            <a href="/">Back to Login</a>
+        </div>
+    </div>
+</body>
+</html>

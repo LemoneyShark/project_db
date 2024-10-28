@@ -1,4 +1,4 @@
-from fastapi import FastAPI,Depends, HTTPException, Request
+from fastapi import FastAPI,Depends, Form, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -65,6 +65,12 @@ def serve_index(request: Request):
     
     return templates.TemplateResponse("dashboard.html", {"request": request, "totals": totals})
 
+
+@app.get("/signup")
+async def signup(request: Request):
+    return templates.TemplateResponse("signup.html", {"request": request})
+
+
 # API สำหรับดึงข้อมูลบริษัท
 @app.get("/companies")
 async def get_companies(db: Session = Depends(get_db)):
@@ -93,3 +99,4 @@ async def read_dashboard(request: Request, com_id: int):
     # ค้นหาผู้ใช้ตาม `id`
     datas = fetch_com(com_id)
     return templates.TemplateResponse("comdashboard.html", {"request": request, "datas":datas})    
+
