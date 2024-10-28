@@ -79,31 +79,20 @@ def fetch_com(name):
      FROM cominfo as c
      JOIN area as a ON c.area = a.id
      JOIN comlogs as l ON c.id = l.com_id
-     WHERE c.name = '{name}'; '''
+     WHERE c.name = ?; '''
+     
+     
+    conn = pyodbc.connect(conn_str)
+    cursor = conn.cursor()
+    cursor.execute(query, (name,))
+    rows = cursor.fetchall()
+    for row in rows:
+        com_data.append({"name": row[0], "website": row[1],"url": row[2],"description_short": row[3], "area":row[4],
+                          "people_count":row[5], "senior_people_count":row[6],"emails_count":row[7],"personal_emails_count":row[8],"phones_count":row[9], 
+                          "addresses_count":row[10],"investors_count":row[11],"clients_count":row[12],"partners_count":row[13],"changes_count":row[14],
+                          "people_changes_count":row[15],"contact_changes_count":row[16]})
 
-    try:
-        # สร้างการเชื่อมต่อ
-        conn = pyodbc.connect(conn_str)
-        cursor = conn.cursor()
-        
-        # รัน query และดึงข้อมูล
-        cursor.execute(query)
-        rows = cursor.fetchall()
-        
-        # เพิ่มข้อมูลลงใน list ในรูปแบบ dictionary
-        for row in rows:
-            print(row[0])
-            com_data.append({"name": row[0], "website": row[1],"url": row[2],"description_short": row[3], "area":row[4],
-                              "people_count":row[5], "senior_people_count":row[6],"emails_count":row[7],"personal_emails_count":row[8],"phones_count":row[9], 
-                              "addresses_count":row[10],"investors_count":row[11],"clients_count":row[12],"partners_count":row[13],"changes_count":row[14],
-                              "people_changes_count":row[15],"contact_changes_count":row[16]})
-    
-    except Exception as e:
-        print(f"Error: {e}")
-    
-    finally:
-        # ปิดการเชื่อมต่อ
-        conn.close()
+    conn.close()
     
     return com_data  # ส่งคืน list ของ dictionary
 
