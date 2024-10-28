@@ -34,7 +34,6 @@ class LoginData(BaseModel):
     username: str
     password: str
 
-
 # API สำหรับการ login
 @app.post("/login")
 async def login(data: LoginData, db: Session = Depends(get_db)):
@@ -99,3 +98,36 @@ async def read_dashboard(request: Request, com_id: str):
     datas = fetch_com(com_id)
     return templates.TemplateResponse("comdashboard.html", {"request": request, "datas":datas})    
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@app.post("/register")
+async def register(
+    first_name: str = Form(...),
+    last_name: str = Form(...),
+    username: str = Form(...),
+    password: str = Form(...),
+    email: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    # ใส่โค้ดสำหรับบันทึกข้อมูลลงตารางที่มีอยู่
+    insert_query = text("INSERT INTO users (firstName, lastName, username, password, email) VALUES (:first_name, :last_name, :username, :password, :email)")
+    db.execute(
+        insert_query,
+        {"first_name": first_name, "last_name": last_name, "username": username, "password": password, "email": email}
+    )
+    db.commit()
+    
+    # Redirect ไปยังหน้าอื่น เช่น หน้า Login หลังสมัครเสร็จ
+    return RedirectResponse(url="/", status_code=303)
