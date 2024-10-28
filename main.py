@@ -58,6 +58,10 @@ async def login(data: LoginData, db: Session = Depends(get_db)):
 def serve_index():
     return FileResponse("templates/login.html")
 
+@app.get("/top")
+def serve_index():
+    return FileResponse("templates/top.html")
+
 @app.get("/dashboard", response_class=HTMLResponse)
 def serve_index(request: Request):
     totals = fetch_total_all()

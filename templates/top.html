@@ -5,9 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top Companies by Employees</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- เพิ่ม Chart.js -->
+    <style>
+        body {
+    font-family: Quicksand, sans-serif;
+    background-color: #0A1128;
+    height: 100vh;
+    color: #FFF;
+    
+}
+button {
+    font-family: Quicksand, sans-serif;
+    width: 10%;
+    padding: 8px;
+    background-color: #3C4F76; /* เทาสเลท */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.chart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+button:hover {
+    background-color: #2a53a7; /* เทาสเลท */
+}
+    </style>
 </head>
 <body>
-    <canvas id="employeeChart" width="400" height="200"></canvas> <!-- กราฟ Chart.js -->
+    <div>
+        <button id="backButton">Back</button>
+    </div>
+    <div>
+        <canvas class="chart" id="employeeChart" width="500" height="200"></canvas>
+    </div>
+    
     <script>
         // ฟังก์ชันดึงข้อมูลจาก API และสร้างแผนภูมิ
         async function fetchTopCompanies() {
@@ -17,8 +53,8 @@
 
                 console.log(data);  // ตรวจสอบข้อมูลที่ได้จาก API
 
-                const companyNames = data.map(company => company.company_name);
-                const employeeCounts = data.map(company => company.employee_count);
+                const companyNames = data.map(company => company.name);
+                const employeeCounts = data.map(company => company.people_count);
 
                 // สร้างแผนภูมิ bar chart
                 const ctx = document.getElementById('employeeChart').getContext('2d');
@@ -51,6 +87,11 @@
 
         // เรียกใช้ฟังก์ชันเมื่อโหลดหน้าเสร็จ
         window.onload = fetchTopCompanies;
+
+        // ปุ่มย้อนกลับไปหน้าก่อนหน้า
+document.getElementById('backButton').addEventListener('click', () => {
+    history.back(); 
+}); 
     </script>
 </body>
 </html>
