@@ -93,8 +93,8 @@ user_data = [
 ]
 
 
-@app.get("/comdash/{com_id}", response_class=HTMLResponse)
-async def read_dashboard(request: Request, com_id: int):
+@app.get("/data/{com_name}", response_class=HTMLResponse)
+async def read_dashboard(request: Request, com_name: str):
     # ค้นหาผู้ใช้ตาม `id`
-    datas = fetch_com(com_id)
+    datas = fetch_com(com_name)
     return templates.TemplateResponse("comdashboard.html", {"request": request, "datas":datas})    

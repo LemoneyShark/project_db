@@ -51,7 +51,7 @@ function displayCompanies(data) {
             `;
             // คลิกที่แถวเพื่อไปหน้าอื่น <td>${company.id}</td>
             row.addEventListener('click', () => {
-                window.location.href = `/data/${company.id}`;
+                window.location.href = `/data/${company.name}`;
             });
             companyTable.appendChild(row);
         });

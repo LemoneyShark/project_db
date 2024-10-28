@@ -70,7 +70,7 @@ def fetch_total_ww():
             total_data.append({"emp": row[0], "changes": row[1],"com":row[2]})
         return total_data
 
-def fetch_com(id):
+def fetch_com(name):
     com_data = []  # สร้าง list สำหรับเก็บข้อมูล
     query = f''' SELECT c.name, c.website, c.url, c.description_short,a.type_name,
      l.people_count, l.senior_people_count, l.emails_count, l.personal_emails_count,	
@@ -79,7 +79,7 @@ def fetch_com(id):
      FROM cominfo as c
      JOIN area as a ON c.area = a.id
      JOIN comlogs as l ON c.id = l.com_id
-     WHERE c.id = {id}; '''
+     WHERE c.name = '{name}'; '''
 
     try:
         # สร้างการเชื่อมต่อ
@@ -107,5 +107,4 @@ def fetch_com(id):
     
     return com_data  # ส่งคืน list ของ dictionary
 
-# r = fetch_com(10002511)  
-# print(r)
+ 
