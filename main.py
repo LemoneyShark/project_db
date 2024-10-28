@@ -73,8 +73,10 @@ async def signup(request: Request):
 @app.get("/companies")
 async def get_companies(db: Session = Depends(get_db)):
     try:
-        query = text("select c.name,c.website,a.type_name,c.id from cominfo as c left join area as a on c.area = a.id")
+        query = text("select c.name,c.website,a.type_name,c.id,l.people_count,l.changes_count from cominfo as c left join area as a on c.area = a.id left join comlogs as l on c.id = l.com_id")
         result = db.execute(query).fetchall()
+
+
         
         # แปลงผลลัพธ์เป็น JSON
         companies = [
@@ -83,6 +85,8 @@ async def get_companies(db: Session = Depends(get_db)):
                 "website": row[1] if row[1] is not None else 'N/A',
                 "area": row[2] if row[2] is not None else 'N/A',
                 "id": row[3] if row[3] is not None else 'N/A',
+                "people_count": row[4] if row[4] is not None else 0,
+                "changes_count": row[5] if row[5] is not None else 0,
             } for row in result
         ]
         return {"data": companies}
@@ -97,20 +101,6 @@ async def read_dashboard(request: Request, com_id: str):
     # ค้นหาผู้ใช้ตาม `id`
     datas = fetch_com(com_id)
     return templates.TemplateResponse("comdashboard.html", {"request": request, "datas":datas})    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @app.post("/register")
 async def register(
@@ -131,3 +121,11 @@ async def register(
     
     # Redirect ไปยังหน้าอื่น เช่น หน้า Login หลังสมัครเสร็จ
     return RedirectResponse(url="/", status_code=303)
+# API สำหรับดึงข้อมูล Top 10 บริษัทตามจำนวนพนักงาน
+@app.get("/top_companies_by_employees")
+def get_top_companies(db: Session = Depends(get_db)):
+    query = "SELECT TOP 10 c.name, l.people_count FROM cominfo as c left join comlogs as l on c.id = l.com_id ORDER BY people_count DESC"
+    result = db.execute(query).fetchall()
+
+    companies = [{"name": row[0], "people_count": row[1]} for row in result]
+    return companies
