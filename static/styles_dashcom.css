@@ -72,12 +72,15 @@ table {
 thead {
     background-color: #1a73e8;
     color: #fff;
+    
 }
 
 th, td {
     padding: 12px 15px;
     text-align: center;
     border: 1px solid #ddd;
+    
+    
 }
 
 button {

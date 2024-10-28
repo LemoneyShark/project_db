@@ -101,10 +101,21 @@ function filterAndSortCompanies() {
         return 0;
     });
 
+    // คำนวณผลรวมหลังจากการกรอง
+    const totalEmployees = filteredCompanies.reduce((acc, company) => acc + company.people_count, 0);
+    const totalChanges = filteredCompanies.reduce((acc, company) => acc + company.changes_count, 0);
+    const totalCompanies = filteredCompanies.length;
+
+    // อัปเดตค่าผลรวมในหน้าเว็บ
+    document.getElementById('totalEmployees').textContent = totalEmployees;
+    document.getElementById('totalChanges').textContent = totalChanges;
+    document.getElementById('totalCompanies').textContent = totalCompanies;
+
     // แสดงผลข้อมูลที่ผ่านการกรองและเรียงแล้ว
     displayCompanies(filteredCompanies);
     setupPagination(filteredCompanies);
 }
+
 
 // ตั้งค่าปุ่มแบ่งหน้า (Pagination)
 function setupPagination(data) {
@@ -166,3 +177,4 @@ window.onload = fetchCompanies;
 document.getElementById('searchInput').addEventListener('input', filterAndSortCompanies);
 document.getElementById('filterArea').addEventListener('change', filterAndSortCompanies);
 document.getElementById('sortBy').addEventListener('change', filterAndSortCompanies);
+
