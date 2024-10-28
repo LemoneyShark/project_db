@@ -62,7 +62,6 @@ def serve_index():
 @app.get("/dashboard", response_class=HTMLResponse)
 def serve_index(request: Request):
     totals = fetch_total_all()
-    
     return templates.TemplateResponse("dashboard.html", {"request": request, "totals": totals})
 
 
@@ -99,7 +98,7 @@ async def get_companies(db: Session = Depends(get_db)):
 
 
 @app.get("/comdash/{com_id}", response_class=HTMLResponse)
-async def read_dashboard(request: Request, com_id: int):
+async def read_dashboard(request: Request, com_id: str):
     # ค้นหาผู้ใช้ตาม `id`
     datas = fetch_com(com_id)
     return templates.TemplateResponse("comdashboard.html", {"request": request, "datas":datas})    
