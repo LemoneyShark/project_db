@@ -1,4 +1,3 @@
-import pandas as pd
 import pyodbc
 conn_str = (
     "DRIVER={ODBC Driver 17 for SQL Server};"
