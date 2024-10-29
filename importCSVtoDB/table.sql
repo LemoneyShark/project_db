@@ -1,10 +1,19 @@
+CREATE TABLE area (
+    id INT PRIMARY KEY,
+    type_name VARCHAR(50)
+    
+);
+
+INSERT INTO area (id, type_name) VALUES (1, 'worldwide'), (2, 'uk');
+
 CREATE TABLE cominfo (
     id VARCHAR(100) PRIMARY KEY,
     name VARCHAR(255),
     website VARCHAR(255),
     url VARCHAR(255),
     description_short VARCHAR(MAX),
-    area INT
+    area INT,
+    CONSTRAINT fk_type FOREIGN KEY (area) REFERENCES area(id)
 );
 
 CREATE TABLE comlogs (
@@ -23,13 +32,11 @@ CREATE TABLE comlogs (
     contact_changes_count INT
 );
 
-CREATE TABLE area (
-    id INT PRIMARY KEY,
-    type_name VARCHAR(50)
+CREATE TABLE users (
+    userID INT PRIMARY KEY IDENTITY(1,1),
+    firstName VARCHAR(50) NOT NULL,
+    lastName VARCHAR(50) NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100)
 );
-
-INSERT INTO type (id, type_name) VALUES (1, 'worldwide'), (2, 'uk');
-
-
-ALTER TABLE cominfo
-ADD CONSTRAINT fk_type FOREIGN KEY (area) REFERENCES area(id);
