@@ -135,7 +135,7 @@ async def register(
 # API สำหรับดึงข้อมูล Top 10 บริษัทตามจำนวนพนักงาน
 @app.get("/top_companies_by_employees")
 def get_top_companies(db: Session = Depends(get_db)):
-    query = "SELECT TOP 10 c.name, l.people_count FROM cominfo as c left join comlogs as l on c.id = l.com_id ORDER BY people_count DESC"
+    query = text("SELECT TOP 10 c.name, l.people_count FROM cominfo as c left join comlogs as l on c.id = l.com_id ORDER BY people_count DESC")
     result = db.execute(query).fetchall()
 
     companies = [{"name": row[0], "people_count": row[1]} for row in result]
