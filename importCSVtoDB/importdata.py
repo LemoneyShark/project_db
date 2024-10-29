@@ -2,8 +2,8 @@ import pandas as pd
 import pyodbc
 
 # อ่านไฟล์ CSV และแปลงคอลัมน์ให้เป็น string
-#file_path = r'importCSVtoDB\aihitdata-worldwide-10k.csv'
-file_path = r'importCSVtoDB\aihitdata-uk-10k.csv'
+file_path = r'importCSVtoDB\aihitdata-worldwide-10k.csv'
+#file_path = r'importCSVtoDB\aihitdata-uk-10k.csv'
 data2 = pd.read_csv(file_path, dtype={
     'id': str,
     'website':str,
@@ -28,9 +28,12 @@ data2.fillna('', inplace=True)
 # ตั้งค่าการเชื่อมต่อกับ SQL Server
 conn_str = (
     "DRIVER={ODBC Driver 17 for SQL Server};"
-    "SERVER=localhost\\SQLEXPRESS;"  # ใช้สองแบ็คสแลชเพื่อ escape
+    "SERVER=aihitdata.cvkk4gk2kk2s.ap-southeast-2.rds.amazonaws.com,1433;"
     "DATABASE=aihitdata;"
-    "Trusted_Connection=yes;"
+    "UID=phiraphat;"  # ใส่ชื่อผู้ใช้ที่ตั้งไว้
+    "PWD=p1305p2547;"  # ใส่รหัสผ่านที่ตั้งไว้
+    "Encrypt=yes;"
+    "TrustServerCertificate=yes;"
 )
 
 # สร้างการเชื่อมต่อกับ SQL Server

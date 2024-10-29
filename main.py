@@ -16,7 +16,14 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 # ตั้งค่าเชื่อมต่อฐานข้อมูล SQL Server
-DATABASE_URL = "mssql+pyodbc://localhost\\SQLEXPRESS/aihitdata?driver=ODBC+Driver+17+for+SQL+Server&Trusted_Connection=yes"
+DATABASE_URL = (
+    "mssql+pyodbc://phiraphat:p1305p2547"
+    "@aihitdata.cvkk4gk2kk2s.ap-southeast-2.rds.amazonaws.com:1433/aihitdata"
+    "?driver=ODBC+Driver+17+for+SQL+Server"
+    "&Encrypt=yes"
+    "&TrustServerCertificate=yes"
+)
+
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
