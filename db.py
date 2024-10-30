@@ -1,9 +1,12 @@
 import pyodbc
+
 conn_str = (
-    "DRIVER={ODBC Driver 17 for SQL Server};"
-    "SERVER=localhost\\SQLEXPRESS;"  # ใช้สองแบ็คสแลชเพื่อ escape
-    "DATABASE=aihitdata;"
-    "Trusted_Connection=yes;"
+    "mssql+pyodbc://phiraphat:p1305p2547"
+    "@aihitdata.cvkk4gk2kk2s.ap-southeast-2.rds.amazonaws.com:1433/aihitdata"
+    "?driver=ODBC+Driver+17+for+SQL+Server"
+    "&Encrypt=yes"
+    "&TrustServerCertificate=yes"
+    "Connect Timeout=30;"
 )
 
 # เรียกใช้ฟังก์ชันและแสดงผลลัพธ์

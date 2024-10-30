@@ -22,6 +22,7 @@ DATABASE_URL = (
     "?driver=ODBC+Driver+17+for+SQL+Server"
     "&Encrypt=yes"
     "&TrustServerCertificate=yes"
+    "Connect Timeout=30;"
 )
 
 engine = create_engine(DATABASE_URL)
