@@ -8,7 +8,6 @@ conn_str = (
     "PWD=p1305p2547;"
     "Encrypt=yes;"
     "TrustServerCertificate=yes;"
-    "Connect Timeout=30;"
 )
 
 # เรียกใช้ฟังก์ชันและแสดงผลลัพธ์
