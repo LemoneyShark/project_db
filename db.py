@@ -1,11 +1,13 @@
 import pyodbc
 
 conn_str = (
-    "mssql+pyodbc://phiraphat:p1305p2547"
-    "@aihitdata.cvkk4gk2kk2s.ap-southeast-2.rds.amazonaws.com:1433/aihitdata"
-    "?driver=ODBC+Driver+17+for+SQL+Server"
-    "&Encrypt=yes"
-    "&TrustServerCertificate=yes"
+    "DRIVER={ODBC Driver 17 for SQL Server};"
+    "SERVER=aihitdata.cvkk4gk2kk2s.ap-southeast-2.rds.amazonaws.com,1433;"
+    "DATABASE=aihitdata;"
+    "UID=phiraphat;"
+    "PWD=p1305p2547;"
+    "Encrypt=yes;"
+    "TrustServerCertificate=yes;"
     "Connect Timeout=30;"
 )
 
